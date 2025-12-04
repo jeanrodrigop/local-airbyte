@@ -1,0 +1,11 @@
+apiVersion: v2
+name: cert-manager-dummy
+description: Dummy chart to install cert-manager and cluster issuers
+type: application
+version: 0.0.0
+dependencies:
+  - name: cert-manager
+    repository: https://charts.jetstack.io
+    alias: cert-manager
+    condition: cert-manager.enabled
+    version: v1.12.14

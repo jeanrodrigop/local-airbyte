@@ -1,0 +1,48 @@
+global:
+  security:
+    allowInsecureImages: true
+
+minio:
+  enabled: true
+  fullnameOverride: "minio-airbyte"
+
+  image:
+    repository: "bitnamilegacy/minio"
+    tag: "2025.7.23-debian-12-r5"
+
+<<<<<<< HEAD
+  extraEnvVars:
+    - name: MINIO_REGION_NAME
+      value: "us-west-2"
+
+=======
+>>>>>>> 790ea1d (feat: Airbyte v1.2.0)
+  console:
+    enabled: true
+    image:
+      repository: bitnamilegacy/minio-object-browser
+      tag: 2.0.2-debian-12-r4
+
+  auth:
+    rootUser: "minio"
+    rootPassword: "minio123"
+
+  defaultBuckets: "airbyte-log, airbyte-state, airbyte-workload, airbyte-activity"
+
+  persistence:
+    enabled: true
+    size: 10Gi
+  
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 1Gi
+      cpu: 500m
+
+  volumePermissions:
+    enabled: true
+    image:
+      repository: bitnamilegacy/os-shell
+      tag: 12-debian-12-r51

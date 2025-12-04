@@ -1,0 +1,10 @@
+apiVersion: v2
+name: minio-dummy
+description: Dummy chart to install External MinIO for Airbyte
+type: application
+version: 0.0.0
+dependencies:
+  - name: minio
+    repository: https://charts.bitnami.com/bitnami
+    version: 17.0.21
+    condition: minio.enabled

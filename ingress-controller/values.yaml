@@ -1,0 +1,45 @@
+tempo:
+  enabled: false
+
+internal-ingress-nginx:
+  enabled: true
+  
+  fullnameOverride: ingress-nginx-controller
+
+  controller:
+    watchIngressWithoutClass: true
+    
+    ingressClassResource:
+      name: nginx
+      enabled: true
+      default: true
+      controllerValue: "k8s.io/ingress-nginx"
+
+    electionID: ingress-controller-leader
+
+    service:
+      type: LoadBalancer
+      annotations: {}
+    
+    metrics:
+      enabled: false
+    
+    opentelemetry:
+      enabled: false
+
+    config:
+      proxy-body-size: "256m"
+      proxy-connect-timeout: "60"
+      proxy-read-timeout: "1800"
+      proxy-send-timeout: "1800"
+
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 500m
+      requests:
+        cpu: 100m
+        memory: 256Mi
+
+external-ingress-nginx:
+  enabled: false

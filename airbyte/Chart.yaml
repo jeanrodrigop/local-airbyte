@@ -1,0 +1,10 @@
+apiVersion: v2
+name: airbyte-dummy-chart
+description: Dummy chart to install airbyte and cluster issuers
+type: application
+version: 0.0.0
+dependencies:
+  - name: airbyte
+    repository: https://airbytehq.github.io/helm-charts
+    condition: airbyte.enabled
+    version: 1.2.0

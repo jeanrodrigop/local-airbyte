@@ -7,4 +7,4 @@ dependencies:
   - name: airbyte
     repository: https://airbytehq.github.io/helm-charts
     condition: airbyte.enabled
-    version: 1.4.0
+    version: 1.5.0

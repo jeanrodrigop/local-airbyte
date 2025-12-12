@@ -98,7 +98,7 @@ airbyte:
       url: /connector-builder-api
 
   pod-sweeper:
-    enabled: true
+    enabled: false
     image:
       tag: "latest"
     podAnnotations: {} 

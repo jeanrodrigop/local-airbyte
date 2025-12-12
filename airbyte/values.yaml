@@ -61,47 +61,33 @@ airbyte:
     annotations: {} 
     name: *service-account-name
 
-  webapp:
+  ingress:
     enabled: true
-    replicaCount: 1
-    resources:
-      limits:
-        cpu: 500m
-        memory: 512Mi
-      requests:
-        memory: 128Mi
-        cpu: 50m
-
-    ingress:
-      enabled: true
-      className: "nginx"
-      annotations:
-        cert-manager.io/cluster-issuer: selfsigned-issuer
-        nginx.ingress.kubernetes.io/proxy-body-size: "256m"
-        nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
-        nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
-        nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
+    className: "nginx"
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned-issuer
+      nginx.ingress.kubernetes.io/proxy-body-size: "256m"
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    rules:
+    - host: airbyte.homelab.local
+      paths:
+      - path: /api/v1/connector_builder/
+        pathType: Prefix
+        service:
+          name: airbyte-airbyte-connector-builder-server-svc
+          port: 80
+      - path: /
+        pathType: Prefix
+        service:
+          name: airbyte-airbyte-server-svc
+          port: 8001
+    tls:
+    - secretName: airbyte-local-tls
       hosts:
-      - host: airbyte.homelab.local
-        paths:
-        - path: /
-          pathType: ImplementationSpecific
-      tls:
-      - secretName: airbyte-local-tls
-        hosts:
-        - airbyte.homelab.local
-
-    api:
-      url: /api/v1/
-
-    connector-builder-server:
-      url: /connector-builder-api
-
-  pod-sweeper:
-    enabled: false
-    image:
-      tag: "latest"
-    podAnnotations: {} 
+      - airbyte.homelab.local
 
   server:
     enabled: true
@@ -109,10 +95,10 @@ airbyte:
     resources:
       limits:
         cpu: 1
-        memory: 2Gi
+        memory: 4Gi
       requests:
-        memory: 256Mi
-        cpu: 100m
+        memory: 512Mi
+        cpu: 500m
     livenessProbe:
       initialDelaySeconds: 180
       periodSeconds: 20
@@ -138,7 +124,7 @@ airbyte:
     resources:
       limits:
         cpu: 500m
-        memory: 1Gi
+        memory: 2Gi
       requests:
         memory: 256Mi
         cpu: 100m

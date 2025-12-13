@@ -18,6 +18,7 @@ Download Chart dependencies before run it.
 helm dependency update cert-manager &&\
 helm dependency update ingress-controller &&\
 helm dependency update postgres &&\
+helm dependency update minio &&\
 helm dependency update airbyte
 ```
 

@@ -10,10 +10,6 @@ minio:
     repository: "bitnamilegacy/minio"
     tag: "2025.7.23-debian-12-r5"
 
-  extraEnvVars:
-    - name: MINIO_REGION_NAME
-      value: "us-west-2"
-
   console:
     enabled: true
     image:

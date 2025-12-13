@@ -11,22 +11,7 @@ This document outlines the steps to deploy Airbyte locally using K3s and a custo
 
 ## Installation Steps
 
-### 1. Create Namespace
-Create a dedicated namespace to isolate the Airbyte resources.
-
-```bash
-kubectl create namespace airbyte
-```
-### 2. Configure Secrets
-Create the generic secrets required for configuration, specifically for the MinIO (S3-compatible storage) backend.
-
-```bash
-kubectl create secret generic airbyte-config-secrets -n airbyte \
---from-literal=minio-access-key-id=minio \
---from-literal=minio-secret-access-key=minio123
-```
-
-### 3. Update Dependencies
+### 1. Update Dependencies
 Download Chart dependencies before run it.
 
 ```bash
@@ -36,7 +21,7 @@ helm dependency update postgres &&\
 helm dependency update airbyte
 ```
 
-### 4. Deploy the Chart
+### 2. Deploy the Charts
 Run your specific Helm install command for the dummy chart.
 
 ```bash
@@ -63,13 +48,7 @@ Access airbyte from your browser.
 https://airbyte.homelab.local
 ```
 ### 3. First Access Credential
-On your first access you will be asked to an e-mail, give one then retrieve admin password from cluster.
-By default, Airbyte generates an admin password. Use the following command to retrieve and decode it:
-Use alphanumeric without # in the end.
-
-```bash
-kubectl get secret airbyte-auth-secrets -n airbyte -o jsonpath="{.data.instance-admin-password}" | base64 -d
-```
+On your first access you will be asked to an e-mail, give one and use password defined in values.yaml "airbyte.global.auth.instanceAdmin.password".
 
 ---
 

@@ -10,23 +10,27 @@ airbyte:
     auth:
       enabled: true
       instanceAdmin:
-        secretName: "airbyte-config-secrets"
-        passwordSecretKey: "instance-admin-password"
+        password: "strongpassword"
       
     database:
       type: "external"
       user: "airbyte"
       password: "password"
-      database: "airbyte"
+      name: "airbyte"
       host: "postgres-airbyte.database.svc.cluster.local"
       port: "5432"
+
+    migrations:
+      runAtStartup: false
     
     ## Internal MinIO 
     storage:
       type: minio
-      storageSecretName: ""
+      secretName: ""
       minio:
         enabled: true
+        accessKeyId: minio
+        secretAccessKey: minio123
     
     ## External MinIO 
     # storage:
@@ -71,19 +75,15 @@ airbyte:
       nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
       nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    rules:
+    hosts:
     - host: airbyte.homelab.local
       paths:
       - path: /api/v1/connector_builder/
         pathType: Prefix
-        service:
-          name: airbyte-airbyte-connector-builder-server-svc
-          port: 80
+        backend: connector-builder-server
       - path: /
         pathType: Prefix
-        service:
-          name: airbyte-airbyte-server-svc
-          port: 8001
+        backend: server
     tls:
     - secretName: airbyte-local-tls
       hosts:
@@ -112,9 +112,10 @@ airbyte:
       failureThreshold: 5
     log:
       level: "INFO"
+    httpIdleTimeout: "20m"
     extraEnv:
-      - name: HTTP_IDLE_TIMEOUT
-        value: "20m"
+      #- name: HTTP_IDLE_TIMEOUT
+      #  value: "20m"
       - name: READ_TIMEOUT
         value: "30m"
 
@@ -135,7 +136,7 @@ airbyte:
     debug:
       enabled: false
 
-  workload-launcher:
+  workloadLauncher:
     enabled: true
     replicaCount: 1
     resources:
@@ -145,36 +146,44 @@ airbyte:
       requests:
         memory: 256Mi
         cpu: 100m
+    extraInitContainers:
+    - name: wait-for-server
+      image: curlimages/curl:latest
+      command:
+        - "sh"
+        - "-c"
+        - >
+          echo "Waiting for Airbyte Server to start...";
+          until curl -f -s http://airbyte-airbyte-server-svc:8001/api/v1/health; do 
+            echo "Server unavailable. Waiting 5 seconds..."; 
+            sleep 5; 
+          done;
+          echo "Server online! Starting launcher.";
     log:
       level: "INFO"
     hpa:
       enabled: false
     debug:
       enabled: false
-
     containerOrchestrator:
       enabled: true
       image: "airbyte/container-orchestrator:{{ default .Chart.AppVersion .Values.global.image.tag }}"
-
     connectorSidecar:
       image: "airbyte/connector-sidecar:{{ default .Chart.AppVersion .Values.global.image.tag }}"
-
     workloadInit:
       image: "airbyte/workload-init-container:{{ default .Chart.AppVersion .Values.global.image.tag }}"
-
     activityMaxAttempt: ""
     activityInitialDelayBetweenAttemptsSeconds: ""
     activityMaxDelayBetweenAttemptsSeconds: ""
-
     maxNotifyWorkers: 5
 
-  connector-rollout-worker:
+  connectorRolloutWorker:
     enabled: false
 
   metrics:
     enabled: false
 
-  airbyte-bootloader:
+  airbyteBootloader:
     enabled: true
 
   temporal:
@@ -188,7 +197,7 @@ airbyte:
         memory: 512Mi
         cpu: 500m
 
-  temporal-ui:
+  temporalUi:
     enabled: false
     resources:
       requests:
@@ -214,7 +223,7 @@ airbyte:
     log:
       level: "INFO"
 
-  connector-builder-server:
+  connectorBuilderServer:
     enabled: true
     replicaCount: 1
     resources:
@@ -237,10 +246,10 @@ airbyte:
       limits:
         memory: 1Gi
 
-  keycloak-setup:
+  keycloakSsetup:
     enabled: true
 
-  workload-api-server:
+  workloadApiServer:
     enabled: true
     bearerToken: token
     replicaCount: 1
@@ -258,7 +267,7 @@ airbyte:
     ingress:
       enabled: false
       
-  featureflag-server:
+  featureflagServer:
     enabled: false
 
   testWebapp:
@@ -273,3 +282,4 @@ airbyte:
         memory: 128Mi
       limits:
         memory: 512Mi
+

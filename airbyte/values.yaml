@@ -34,21 +34,23 @@ airbyte:
     
     ## External MinIO 
     # storage:
-    #   type: s3
-    #   storageSecretName: "airbyte-config-secrets"
-
+    #   type: minio
+    #   secretName: ""
+    #
     #   bucket:
     #     log: "airbyte-log"
     #     state: "airbyte-state"
     #     workloadOutput: "airbyte-workload"
     #     activityPayload: "airbyte-activity"
-
-    #   s3:
-    #     region: "us-west-2"
-    #     authenticationType: "credentials"
+    #
+    #   minio:
+    #     enabled: true
+    #
     #     endpoint: "http://minio-airbyte.storage.svc.cluster.local:9000"
-    #     accessKeyIdSecretKey: "minio-access-key-id"
-    #     secretAccessKeySecretKey: "minio-secret-access-key"
+    #
+    #     accessKeyId: "minio"
+    #     secretAccessKey: "minio123"
+    #
     #     s3PathStyleAccess: true
 
     jobs:

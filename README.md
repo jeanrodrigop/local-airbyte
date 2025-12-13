@@ -29,6 +29,7 @@ helm upgrade --install cert-manager cert-manager -f cert-manager/values.yaml -n 
 kubectl apply -f cert-manager/selfsigned-issuer.yaml &&\
 helm upgrade --install ingress-controller ingress-controller -f ingress-controller/values.yaml -n ingress-nginx --create-namespace &&\
 helm upgrade --install postgres postgres -f postgres/values.yaml -n database --create-namespace --wait &&\
+helm upgrade --install minio minio -f minio/values.yaml -n storage --create-namespace &&\
 helm upgrade --install airbyte airbyte -f airbyte/values.yaml -n airbyte --timeout 20m
 ```
 

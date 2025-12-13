@@ -5,6 +5,12 @@ airbyte:
     deploymentMode: "oss"
     edition: "community"
 
+    env_vars:
+      JOB_MAIN_CONTAINER_CPU_REQUEST: "0.2"
+      JOB_MAIN_CONTAINER_MEMORY_REQUEST: "256Mi"
+      JOB_MAIN_CONTAINER_CPU_LIMIT: "1.0"
+      JOB_MAIN_CONTAINER_MEMORY_LIMIT: "1Gi"
+
     airbyteUrl: "http://airbyte.homelab.local"
 
     auth:
@@ -60,7 +66,7 @@ airbyte:
           memory: 512Mi
         requests:
           memory: 128Mi
-          cpu: 250m
+          cpu: 100m
 
   serviceAccount:
     create: true
@@ -116,8 +122,6 @@ airbyte:
       level: "INFO"
     httpIdleTimeout: "20m"
     extraEnv:
-      #- name: HTTP_IDLE_TIMEOUT
-      #  value: "20m"
       - name: READ_TIMEOUT
         value: "30m"
 

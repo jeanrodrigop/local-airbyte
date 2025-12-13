@@ -18,6 +18,7 @@ Download Chart dependencies before run it.
 helm dependency update cert-manager &&\
 helm dependency update ingress-controller &&\
 helm dependency update postgres &&\
+helm dependency update minio &&\
 helm dependency update airbyte
 ```
 
@@ -30,7 +31,7 @@ kubectl apply -f cert-manager/selfsigned-issuer.yaml &&\
 helm upgrade --install ingress-controller ingress-controller -f ingress-controller/values.yaml -n ingress-nginx --create-namespace &&\
 helm upgrade --install postgres postgres -f postgres/values.yaml -n database --create-namespace --wait &&\
 helm upgrade --install minio minio -f minio/values.yaml -n storage --create-namespace &&\
-helm upgrade --install airbyte airbyte -f airbyte/values.yaml -n airbyte --timeout 20m
+helm upgrade --install airbyte airbyte -f airbyte/values.yaml -n airbyte --create-namespace --timeout 20m
 ```
 
 ---

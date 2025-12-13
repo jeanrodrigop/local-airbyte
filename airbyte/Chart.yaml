@@ -5,6 +5,6 @@ type: application
 version: 0.0.0
 dependencies:
   - name: airbyte
-    repository: https://airbytehq.github.io/helm-charts
+    repository: https://airbytehq.github.io/charts
     condition: airbyte.enabled
-    version: 1.9.2
+    version: 2.0.19

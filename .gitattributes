@@ -1,7 +1,7 @@
 * text=auto
 
-*.yaml text eol=lf
-*.yml  text eol=lf
+*.yaml text eol=lf linguist-detectable=true
+*.yml  text eol=lf linguist-detectable=true
 
 *.tpl text eol=lf linguist-language=Go
 
